@@ -92,7 +92,7 @@ def parse_vulnerabilities(output):
 def save_scan_results_to_csv(parsed_results, exploitable_csv_file, all_exploits_csv_file):
     """
     Save the parsed scan results to CSV files.
-    
+
     Args:
     - parsed_results: Dictionary containing parsed scan results
     - exploitable_csv_file: Path to the CSV file to save exploitable results
