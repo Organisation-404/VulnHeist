@@ -1,7 +1,7 @@
 Exploitable.csv
 All_exploits.csv
 complete_results.csv
-exploits.log
-__pycache__/main.cpython-311.pyc
+pycache__/main.cpython-311.pyc
 scan_results.xml
-
+__pycache__
+exploit.log
