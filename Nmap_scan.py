@@ -160,9 +160,7 @@ def save_complete_results_to_csv(xml_file, complete_csv_file):
     except Exception as e:
         print(f"Error saving output to CSV: {e}")
 
-def main():
-    # Get target IP address or hostname from user
-    target = input("Enter the target IP address or hostname: ")
+def Nmap_main(target):
 
     # Execute Nmap scan
     xml_file = execute_nmap_scan(target)
@@ -179,8 +177,10 @@ def main():
             complete_csv_file = 'complete_results.csv'
             save_scan_results_to_csv(parsed_results, exploitable_csv_file, all_exploits_csv_file)
             save_complete_results_to_csv(xml_file, complete_csv_file)
+            return exploitable_csv_file, all_exploits_csv_file, complete_csv_file
     else:
         print("Nmap scan failed. Please check your input and try again.")
+        return None, None, None
 
 if __name__ == "__main__":
-    main()
+    Nmap_main()
