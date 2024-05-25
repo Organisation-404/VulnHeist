@@ -9,6 +9,9 @@ from rich.theme import Theme
 from rich.progress import Progress
 from Nmap_scan import Nmap_main
 from main import exploit_main
+from art import art, ART_NAMES
+from pyfiglet import Figlet
+from rich.text import Text
 
 
 # Define a custom theme with colors and styles
@@ -23,49 +26,91 @@ custom_theme = Theme({
     "table.even_row": "cyan",
 })
 
-# Create a console with the custom theme
+
 console = Console(theme=custom_theme)
 
-def print_ascii_art():
-    start_time=time.time()
-    ascii_art = """
+# def print_ascii_art():
+#     start_time=time.time()
+#     ascii_art = """
                                                                                                
                                                                                                
-               AAA               PPPPPPPPPPPPPPPPP   TTTTTTTTTTTTTTTTTTTTTTT   SSSSSSSSSSSSSSS 
-              A:::A              P::::::::::::::::P  T:::::::::::::::::::::T SS:::::::::::::::S
-             A:::::A             P::::::PPPPPP:::::P T:::::::::::::::::::::TS:::::SSSSSS::::::S
-            A:::::::A            PP:::::P     P:::::PT:::::TT:::::::TT:::::TS:::::S     SSSSSSS
-           A:::::::::A             P::::P     P:::::PTTTTTT  T:::::T  TTTTTTS:::::S            
-          A:::::A:::::A            P::::P     P:::::P        T:::::T        S:::::S            
-         A:::::A A:::::A           P::::PPPPPP:::::P         T:::::T         S::::SSSS         
-        A:::::A   A:::::A          P:::::::::::::PP          T:::::T          SS::::::SSSSS    
-       A:::::A     A:::::A         P::::PPPPPPPPP            T:::::T            SSS::::::::SS  
-      A:::::AAAAAAAAA:::::A        P::::P                    T:::::T               SSSSSS::::S 
-     A:::::::::::::::::::::A       P::::P                    T:::::T                    S:::::S
-    A:::::AAAAAAAAAAAAA:::::A      P::::P                    T:::::T                    S:::::S
-   A:::::A             A:::::A   PP::::::PP                TT:::::::TT      SSSSSSS     S:::::S
-  A:::::A               A:::::A  P::::::::P                T:::::::::T      S::::::SSSSSS:::::S
- A:::::A                 A:::::A P::::::::P                T:::::::::T      S:::::::::::::::SS 
-AAAAAAA                   AAAAAAAPPPPPPPPPP                TTTTTTTTTTT       SSSSSSSSSSSSSSS                                                                    
+#                AAA               PPPPPPPPPPPPPPPPP   TTTTTTTTTTTTTTTTTTTTTTT   SSSSSSSSSSSSSSS 
+#               A:::A              P::::::::::::::::P  T:::::::::::::::::::::T SS:::::::::::::::S
+#              A:::::A             P::::::PPPPPP:::::P T:::::::::::::::::::::TS:::::SSSSSS::::::S
+#             A:::::::A            PP:::::P     P:::::PT:::::TT:::::::TT:::::TS:::::S     SSSSSSS
+#            A:::::::::A             P::::P     P:::::PTTTTTT  T:::::T  TTTTTTS:::::S            
+#           A:::::A:::::A            P::::P     P:::::P        T:::::T        S:::::S            
+#          A:::::A A:::::A           P::::PPPPPP:::::P         T:::::T         S::::SSSS         
+#         A:::::A   A:::::A          P:::::::::::::PP          T:::::T          SS::::::SSSSS    
+#        A:::::A     A:::::A         P::::PPPPPPPPP            T:::::T            SSS::::::::SS  
+#       A:::::AAAAAAAAA:::::A        P::::P                    T:::::T               SSSSSS::::S 
+#      A:::::::::::::::::::::A       P::::P                    T:::::T                    S:::::S
+#     A:::::AAAAAAAAAAAAA:::::A      P::::P                    T:::::T                    S:::::S
+#    A:::::A             A:::::A   PP::::::PP                TT:::::::TT      SSSSSSS     S:::::S
+#   A:::::A               A:::::A  P::::::::P                T:::::::::T      S::::::SSSSSS:::::S
+#  A:::::A                 A:::::A P::::::::P                T:::::::::T      S:::::::::::::::SS 
+# AAAAAAA                   AAAAAAAPPPPPPPPPP                TTTTTTTTTTT       SSSSSSSSSSSSSSS                                                                    
                                
-"""
-    colors = ["\033[91m", "\033[92m", "\033[93m", "\033[94m", "\033[34m", "\033[96m", "\033[33m"]  # ANSI escape codes for colors
-    text = " "
+# """
+#     colors = ["\033[91m", "\033[92m", "\033[93m", "\033[94m", "\033[34m", "\033[96m", "\033[33m"]  # ANSI escape codes for colors
+#     text = " "
     
-    while True:
-        os.system('cls' if os.name == 'nt' else 'clear')  # Clear the screen
+#     while True:
+#         os.system('cls' if os.name == 'nt' else 'clear')  # Clear the screen
         
-        # Generate a random color for each letter of "APTS"
-        colored_text = "".join(random.choice(colors) + letter for letter in text)
+#         # Generate a random color for each letter of "APTS"
+#         colored_text = "".join(random.choice(colors) + letter for letter in text)
         
-        print(ascii_art)  # Print ASCII art
-        print(colored_text)  # Print colored "APTS" text
+#         print(ascii_art)  # Print ASCII art
+#         print(colored_text)  # Print colored "APTS" text
         
-        # Check if 5 seconds have passed
-        if time.time() - start_time >= 3:
-            break
+#         # Check if 5 seconds have passed
+#         if time.time() - start_time >= 3:
+#             break
         
-        time.sleep(0.1)  
+#         time.sleep(0.1)  
+
+valid_arts = ART_NAMES
+
+def generate_random_art():
+    # Select random text
+    texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "APTS", "Security", "Python CLI", "Metasploit"]
+    random_text = random.choice(texts)
+
+    # Select random ASCII art
+    random_art = random.choice(valid_arts)
+
+    return random_text, random_art
+
+def display_art_with_animation():
+    random_text, random_art = generate_random_art()
+    
+    # Generate ASCII text art
+    figlet = Figlet(font='big')
+    ascii_text = figlet.renderText(random_text)
+    
+    # Generate ASCII design art
+    try:
+        ascii_design = art(random_art)
+    except:
+        ascii_design = art("cat")  # Fallback to "cat" if there's an error
+
+    # Combine both arts
+    combined_art = f"{ascii_text}\n{ascii_design}"
+
+    # Animate the display
+    for line in combined_art.split('\n'):
+        console.print(Text(line, style="bold green"))
+        time.sleep(0.05)  # Sleep to create animation effect
+
+    # Display random promotional line
+    promo_lines = [
+        "\nUnlock the future of security testing with APTS: Where automation meets precision.\n",
+        "\nAccelerate penetration testing with APTS: Your all-in-one automation suite.\n",
+        "\nExperience seamless testing with APTS: Your trusted partner in automated penetration testing.\n"
+    ]
+    console.print(Text(random.choice(promo_lines), style="bold green"))
+
 
 
 def scan_command(args):
@@ -142,7 +187,7 @@ def main():
     args = parser.parse_args()
 
     if not args.No_Banner:
-        print_ascii_art()
+        display_art_with_animation()
     
     if args.Exploit:
         scan_command(args)
@@ -150,8 +195,8 @@ def main():
         console.rule()
     elif args.ip_address:
         scan_command(args)
-        val = console.input("[bold magenta]Do you want to continue with the exploitation? [y/n]: [/bold magenta]")
-        if val.lower() == 'y':
+        val = console.input("[bold magenta]Do you want to continue with the exploitation? [yes/no]: [/bold magenta]")
+        if val.lower() == 'yes':
             exploit_main(args.Exploit, verbose=not args.VerboseOff)
             console.rule()
         console.rule()

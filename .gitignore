@@ -4,3 +4,6 @@ complete_results.csv
 pycache__/main.cpython-311.pyc
 scan_results.xml
 exploit.log
+Final_result.md
+__pycache__/
+exploit_analysis_chart.png
