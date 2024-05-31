@@ -7,7 +7,7 @@ from rich.table import Table
 from rich.console import Console
 from rich.theme import Theme
 from rich.progress import Progress
-from Nmap_scan import Nmap_main
+from Nmap_scan import Nmap_main, is_ip_scanned
 from main import exploit_main
 from art import art, ART_NAMES
 from pyfiglet import Figlet
@@ -29,46 +29,7 @@ custom_theme = Theme({
 
 console = Console(theme=custom_theme)
 
-# def print_ascii_art():
-#     start_time=time.time()
-#     ascii_art = """
-                                                                                               
-                                                                                               
-#                AAA               PPPPPPPPPPPPPPPPP   TTTTTTTTTTTTTTTTTTTTTTT   SSSSSSSSSSSSSSS 
-#               A:::A              P::::::::::::::::P  T:::::::::::::::::::::T SS:::::::::::::::S
-#              A:::::A             P::::::PPPPPP:::::P T:::::::::::::::::::::TS:::::SSSSSS::::::S
-#             A:::::::A            PP:::::P     P:::::PT:::::TT:::::::TT:::::TS:::::S     SSSSSSS
-#            A:::::::::A             P::::P     P:::::PTTTTTT  T:::::T  TTTTTTS:::::S            
-#           A:::::A:::::A            P::::P     P:::::P        T:::::T        S:::::S            
-#          A:::::A A:::::A           P::::PPPPPP:::::P         T:::::T         S::::SSSS         
-#         A:::::A   A:::::A          P:::::::::::::PP          T:::::T          SS::::::SSSSS    
-#        A:::::A     A:::::A         P::::PPPPPPPPP            T:::::T            SSS::::::::SS  
-#       A:::::AAAAAAAAA:::::A        P::::P                    T:::::T               SSSSSS::::S 
-#      A:::::::::::::::::::::A       P::::P                    T:::::T                    S:::::S
-#     A:::::AAAAAAAAAAAAA:::::A      P::::P                    T:::::T                    S:::::S
-#    A:::::A             A:::::A   PP::::::PP                TT:::::::TT      SSSSSSS     S:::::S
-#   A:::::A               A:::::A  P::::::::P                T:::::::::T      S::::::SSSSSS:::::S
-#  A:::::A                 A:::::A P::::::::P                T:::::::::T      S:::::::::::::::SS 
-# AAAAAAA                   AAAAAAAPPPPPPPPPP                TTTTTTTTTTT       SSSSSSSSSSSSSSS                                                                    
-                               
-# """
-#     colors = ["\033[91m", "\033[92m", "\033[93m", "\033[94m", "\033[34m", "\033[96m", "\033[33m"]  # ANSI escape codes for colors
-#     text = " "
-    
-#     while True:
-#         os.system('cls' if os.name == 'nt' else 'clear')  # Clear the screen
-        
-#         # Generate a random color for each letter of "APTS"
-#         colored_text = "".join(random.choice(colors) + letter for letter in text)
-        
-#         print(ascii_art)  # Print ASCII art
-#         print(colored_text)  # Print colored "APTS" text
-        
-#         # Check if 5 seconds have passed
-#         if time.time() - start_time >= 3:
-#             break
-        
-#         time.sleep(0.1)  
+
 
 valid_arts = ART_NAMES
 
@@ -112,12 +73,12 @@ def display_art_with_animation():
     console.print(Text(random.choice(promo_lines), style="bold green"))
 
 
-
 def scan_command(args):
-    if args.Exploit:
-        exploitable_csv_file , all_exploits_csv_file, complete_csv_file = Nmap_main(args.Exploit)
-    else:
-        exploitable_csv_file , all_exploits_csv_file, complete_csv_file = Nmap_main(args.ip_address)
+        if (args.exploit_ip_address):
+            exploitable_csv_file , all_exploits_csv_file, complete_csv_file = Nmap_main(args.exploit_ip_address)
+        else:
+            exploitable_csv_file , all_exploits_csv_file, complete_csv_file = Nmap_main(args.scan_ip_address)
+
 
 def print_csv_as_table(file_name):
     try:
@@ -151,16 +112,16 @@ def print_csv_as_table(file_name):
         console.print(f"[error]Error opening file: {e}[/error]")
 
 def open_command(args):
-    if args.file_name in ['Exploitable.csv', 'Non_Exploitable.csv', 'complete_results.csv']:
+    if args.file_name in ['Exploitable.csv', 'All_exploits.csv', 'complete_results.csv']:
         print_csv_as_table(args.file_name)
     else:
         console.print(f"[error]Invalid file name '{args.file_name}'.[/error]")
-        console.print("[info]Please provide a valid file name: 'Exploitable.csv', 'Non_Exploitable.csv', or 'complete_results.csv'[/info]")
+        console.print("[info]Please provide a valid file name: 'Exploitable.csv', 'All_exploits.csv', or 'complete_results.csv'[/info]")
 
 def open_all_command(args):
     print_csv_as_table('Exploitable.csv')
     console.rule()
-    print_csv_as_table('Non_Exploitable.csv')
+    print_csv_as_table('All_exploits.csv')
     console.rule()
     console.print("[bold magenta]Complete results[/bold magenta]")
     print_csv('complete_results.csv')
@@ -175,41 +136,43 @@ def print_csv(file_name):
         console.print(f"\n[bold red]Error printing CSV file: {e}[/bold red]")
 
 def main():
-    parser = argparse.ArgumentParser(description='Nmap CLI')
-    parser.add_argument('--Sc', '--Scan', dest='ip_address', help='IP address to scan')
-    parser.add_argument('--O', '--Open', dest='file_name', choices=['Exploitable.csv', 'Non_Exploitable.csv', 'complete_results.csv'], help='Open a report file [.csv]')
-    parser.add_argument('--Oa', '--OpenAll', dest='OpenAll', action='store_true', help='Open all CSV files')
-    parser.add_argument('--X', '--XBan', dest='No_Banner', action='store_true', help='Disable the banner')
-    parser.add_argument('--Ex', '--Exploit', dest='Exploit', help='Exploit the vulnerabilities')
-    parser.add_argument('--Vx', '--VerboseOff', dest='VerboseOff', action='store_true', help='Turn off verbose mode for exploitation')
+    parser = argparse.ArgumentParser(description='Automated Penetration Testing Suite (APTS)')
 
+    parser.add_argument('-S', dest='scan_ip_address', help='IP address to scan')
+    parser.add_argument('-O',dest='file_name', choices=['Exploitable.csv', 'All_exploits.csv', 'complete_results.csv'], help='Open a report file [.csv]')
+    parser.add_argument('-Oa', dest='OpenAll', action='store_true', help='Open all CSV files')
+    parser.add_argument('-x', dest='No_Banner', action='store_true', help='Disable the banner')
+    parser.add_argument('-E',  dest='exploit_ip_address', help='Exploit the vulnerabilities')
+    parser.add_argument('-v',  dest='VerboseOff', action='store_true', help='Turn off verbose mode for exploitation')
 
     args = parser.parse_args()
-
+    scanned_ips_file = 'scanned_ips.csv'
     if not args.No_Banner:
         display_art_with_animation()
     
-    if args.Exploit:
+    if args.exploit_ip_address:
+        if is_ip_scanned(args.exploit_ip_address, scanned_ips_file):
+            print(f"The IP address {args.exploit_ip_address} has already been scanned.")
+        else:
+            scan_command(args)
+
+        exploit_main(args.exploit_ip_address, verbose=not args.VerboseOff)
+        
+    elif args.scan_ip_address:
         scan_command(args)
-        exploit_main(args.Exploit, verbose=not args.VerboseOff)
-        console.rule()
-    elif args.ip_address:
-        scan_command(args)
-        val = console.input("[bold magenta]Do you want to continue with the exploitation? [yes/no]: [/bold magenta]")
-        if val.lower() == 'yes':
-            exploit_main(args.Exploit, verbose=not args.VerboseOff)
-            console.rule()
-        console.rule()
+        val = console.input("[bold magenta]Do you want to continue with the exploitation? (y/n): [/bold magenta]")
+        if val.lower() == 'y':
+            exploit_main(args.scan_ip_address, verbose=not args.VerboseOff)
+            
     if args.file_name:
         open_command(args)
-        console.rule()
+        
     if args.OpenAll:
         open_all_command(args)
-        console.rule()
+        
     
-    if not args.ip_address and not args.file_name and not args.OpenAll and not args.Exploit:
+    if not args.exploit_ip_address and not args.file_name and not args.OpenAll and not args.scan_ip_address:
         console.print("[bold red]No arguments provided.[/bold red]")
         parser.print_help()
-
 if __name__ == '__main__':
     main()

@@ -160,7 +160,25 @@ def save_complete_results_to_csv(xml_file, complete_csv_file):
     except Exception as e:
         print(f"Error saving output to CSV: {e}")
 
+
+def is_ip_scanned(ip_address, scanned_ips_file):
+    if not os.path.exists(scanned_ips_file):
+        return False
+    with open(scanned_ips_file, 'r') as file:
+        csv_reader = csv.reader(file)
+        for row in csv_reader:
+            if row and row[0] == ip_address:
+                return True
+    return False
+
+def add_ip_to_scanned(ip_address, scanned_ips_file):
+    with open(scanned_ips_file, 'a', newline='') as file:
+        csv_writer = csv.writer(file)
+        csv_writer.writerow([ip_address])
+
+
 def Nmap_main(target):
+    scanned_ips_file = 'scanned_ips.csv'
 
     # Execute Nmap scan
     xml_file = execute_nmap_scan(target)
@@ -177,6 +195,8 @@ def Nmap_main(target):
             complete_csv_file = 'complete_results.csv'
             save_scan_results_to_csv(parsed_results, exploitable_csv_file, all_exploits_csv_file)
             save_complete_results_to_csv(xml_file, complete_csv_file)
+            if not is_ip_scanned(target, scanned_ips_file):
+                add_ip_to_scanned(target, scanned_ips_file)
             return exploitable_csv_file, all_exploits_csv_file, complete_csv_file
     else:
         print("Nmap scan failed. Please check your input and try again.")
