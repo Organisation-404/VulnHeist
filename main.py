@@ -66,6 +66,32 @@ def parse_csv(file_path):
 
     return parsed_data
 
+
+def search_exploits_by_product_and_version(client, product, version, platform=None, module_type='exploit'):
+    global service_exploits
+
+    try:
+        # Build search arguments based on product and version
+        search_arguments = f'name:{product} version:{version}'
+        if platform:
+            search_arguments += f' platform:{platform}'
+        else:
+            search_arguments += f' platform:linux'
+        console.print(f'{search_arguments} type:{module_type}')
+        search_result = client.modules.search(f'{search_arguments} type:{module_type}')
+        
+        # Extract module names from search result
+        modules = [module['fullname'] for module in search_result]
+
+        # Append searched modules to the global dictionary
+        if product not in service_exploits:
+            service_exploits[product] = []
+        service_exploits[product].extend(modules)
+
+    except Exception as e:
+        console.print(f"[red]Error occurred while searching for exploits:[/red] {e}")
+
+
 def search_exploits(client, service_name, platform, module_type='exploit'):
     global service_exploits
 
