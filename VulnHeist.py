@@ -43,7 +43,7 @@ def generate_random_art():
     - tuple: A tuple containing a random text and a random ASCII art
     """
  
-    texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "Security", "Automation", "Precision"]
+    texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "Security", "Automation", "Precision","VulnHeist"]
     random_text = random.choice(texts)
 
     random_art = random.choice(valid_arts)
@@ -76,9 +76,9 @@ def display_art_with_animation():
 
     # Display random promotional line
     promo_lines = [
-        "\nUnlock the future of security testing with APTS: Where automation meets precision.\n",
-        "\nAccelerate penetration testing with APTS: Your all-in-one automation suite.\n",
-        "\nExperience seamless testing with APTS: Your trusted partner in automated penetration testing.\n"
+        "\nUnlock the future of security testing with VulnHeist: Where automation meets precision.\n",
+        "\nAccelerate penetration testing with VulnHeist: Your all-in-one automation suite.\n",
+        "\nExperience seamless testing with VulnHeist: Your trusted partner in automated penetration testing.\n"
     ]
     console.print(Text(random.choice(promo_lines), style="bold green"))
 
@@ -181,7 +181,7 @@ def print_csv(file_name):
         console.print(f"\n[bold red]Error printing CSV file: {e}[/bold red]")
 
 def main():
-    parser = argparse.ArgumentParser(description='Automated Penetration Testing Suite (APTS)')
+    parser = argparse.ArgumentParser(description='VulnHeist: Automated Penetration Testing Suite')
 
     parser.add_argument('-S', dest='scan_ip_address', help='IP address to scan')
     parser.add_argument('-O',dest='file_name', choices=['Exploitable.csv', 'All_exploits.csv', 'complete_results.csv'], help='Open a report file [.csv]')

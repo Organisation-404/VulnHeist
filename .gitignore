@@ -1,5 +1,6 @@
 Exploitable.csv
 All_exploits.csv
+scanned_ips.csv
 complete_results.csv
 pycache__/main.cpython-311.pyc
 scan_results.xml
