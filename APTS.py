@@ -43,7 +43,7 @@ def generate_random_art():
     - tuple: A tuple containing a random text and a random ASCII art
     """
  
-    texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "APTS", "Security", "Python CLI", "Metasploit"]
+    texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "Security", "Automation", "Precision"]
     random_text = random.choice(texts)
 
     random_art = random.choice(valid_arts)
@@ -143,8 +143,10 @@ def open_command(args):
     Args:
     - args: Command line arguments containing the file name to open
     """
-    if args.file_name in ['Exploitable.csv', 'All_exploits.csv', 'complete_results.csv']:
+    if args.file_name in ['Exploitable.csv', 'All_exploits.csv']:
         print_csv_as_table(args.file_name)
+    elif args.file_name in [ 'complete_results.csv']:
+        print_csv(args.file_name)
     else:
         console.print(f"[error]Invalid file name '{args.file_name}'.[/error]")
         console.print("[info]Please provide a valid file name: 'Exploitable.csv', 'All_exploits.csv', or 'complete_results.csv'[/info]")
