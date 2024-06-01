@@ -12,6 +12,8 @@ from main import exploit_main
 from art import art, ART_NAMES
 from pyfiglet import Figlet
 from rich.text import Text
+import threading
+from exploit_functions import manage_msfrpcd
 
 
 # Define a custom theme with colors and styles
@@ -34,30 +36,38 @@ console = Console(theme=custom_theme)
 valid_arts = ART_NAMES
 
 def generate_random_art():
-    # Select random text
+    """
+    Generate random text and ASCII art.
+
+    Returns:
+    - tuple: A tuple containing a random text and a random ASCII art
+    """
+ 
     texts = ["Welcome", "Penetration Testing", "Cyber Resilience", "APTS", "Security", "Python CLI", "Metasploit"]
     random_text = random.choice(texts)
 
-    # Select random ASCII art
     random_art = random.choice(valid_arts)
 
     return random_text, random_art
 
 def display_art_with_animation():
+    """
+    Display random text and ASCII art with an animation effect, followed by a random promotional line.
+    """
     random_text, random_art = generate_random_art()
     
-    # Generate ASCII text art
+   
     figlet = Figlet(font='big')
     ascii_text = figlet.renderText(random_text)
     
-    # Generate ASCII design art
+    
     try:
         ascii_design = art(random_art)
     except:
-        ascii_design = art("cat")  # Fallback to "cat" if there's an error
+        ascii_design = art("cat")  
 
-    # Combine both arts
-    combined_art = f"{ascii_text}\n{ascii_design}"
+  
+    combined_art = f"{ascii_text}"
 
     # Animate the display
     for line in combined_art.split('\n'):
@@ -74,6 +84,15 @@ def display_art_with_animation():
 
 
 def scan_command(args):
+        """
+    Execute the scan command based on the provided arguments.
+
+    Args:
+    - args: Command line arguments containing IP addresses to scan
+
+    Returns:
+    - tuple: Files containing scan results
+    """
         if (args.exploit_ip_address):
             exploitable_csv_file , all_exploits_csv_file, complete_csv_file = Nmap_main(args.exploit_ip_address)
         else:
@@ -81,6 +100,12 @@ def scan_command(args):
 
 
 def print_csv_as_table(file_name):
+    """
+    Print the contents of a CSV file as a formatted table.
+
+    Args:
+    - file_name: The name of the CSV file to read and display
+    """
     try:
         with open(file_name, 'r') as file:
             csv_reader = csv.DictReader(file)
@@ -112,6 +137,12 @@ def print_csv_as_table(file_name):
         console.print(f"[error]Error opening file: {e}[/error]")
 
 def open_command(args):
+    """
+    Open and display the contents of a specified CSV file if it is valid.
+
+    Args:
+    - args: Command line arguments containing the file name to open
+    """
     if args.file_name in ['Exploitable.csv', 'All_exploits.csv', 'complete_results.csv']:
         print_csv_as_table(args.file_name)
     else:
@@ -119,6 +150,12 @@ def open_command(args):
         console.print("[info]Please provide a valid file name: 'Exploitable.csv', 'All_exploits.csv', or 'complete_results.csv'[/info]")
 
 def open_all_command(args):
+    """
+    Open and display the contents of all relevant CSV files sequentially with separators.
+
+    Args:
+    - args: Command line arguments (not used in this function)
+    """
     print_csv_as_table('Exploitable.csv')
     console.rule()
     print_csv_as_table('All_exploits.csv')
@@ -127,6 +164,12 @@ def open_all_command(args):
     print_csv('complete_results.csv')
 
 def print_csv(file_name):
+    """
+    Print the entire contents of a CSV file.
+
+    Args:
+    - file_name: The name of the CSV file to read and print
+    """
     try:
         with open(file_name, 'r') as file:
             console.print(file.read())
@@ -147,10 +190,18 @@ def main():
 
     args = parser.parse_args()
     scanned_ips_file = 'scanned_ips.csv'
+
+    
+    
     if not args.No_Banner:
         display_art_with_animation()
-    
+
+    msfrpcd_thread = threading.Thread(target=manage_msfrpcd)
+    msfrpcd_thread.start()
+ 
     if args.exploit_ip_address:
+        
+        
         if is_ip_scanned(args.exploit_ip_address, scanned_ips_file):
             print(f"The IP address {args.exploit_ip_address} has already been scanned.")
         else:

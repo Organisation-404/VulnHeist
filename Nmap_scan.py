@@ -162,6 +162,16 @@ def save_complete_results_to_csv(xml_file, complete_csv_file):
 
 
 def is_ip_scanned(ip_address, scanned_ips_file):
+    """
+    Check if an IP address has already been scanned.
+
+    Args:
+    - ip_address: The IP address to check
+    - scanned_ips_file: The file containing scanned IP addresses
+
+    Returns:
+    - bool: True if the IP address has been scanned, False otherwise
+    """
     if not os.path.exists(scanned_ips_file):
         return False
     with open(scanned_ips_file, 'r') as file:
@@ -172,6 +182,13 @@ def is_ip_scanned(ip_address, scanned_ips_file):
     return False
 
 def add_ip_to_scanned(ip_address, scanned_ips_file):
+    """
+    Add an IP address to the scanned IPs file.
+
+    Args:
+    - ip_address: The IP address to add
+    - scanned_ips_file: The file to append the IP address to
+    """
     with open(scanned_ips_file, 'a', newline='') as file:
         csv_writer = csv.writer(file)
         csv_writer.writerow([ip_address])

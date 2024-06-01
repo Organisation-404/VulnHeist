@@ -68,6 +68,16 @@ def parse_csv(file_path):
 
 
 def search_exploits_by_product_and_version(client, product, version, platform=None, module_type='exploit'):
+    """
+    Search for exploits by product, version, and optionally platform.
+
+    Args:
+    - client: The Metasploit client object.
+    - product (str): The name of the product.
+    - version (str): The version of the product.
+    - platform (str, optional): The platform of the product. Defaults to None.
+    - module_type (str, optional): The type of module to search for. Defaults to 'exploit'.
+    """
     global service_exploits
 
     try:
@@ -92,7 +102,17 @@ def search_exploits_by_product_and_version(client, product, version, platform=No
         console.print(f"[red]Error occurred while searching for exploits:[/red] {e}")
 
 
+
 def search_exploits(client, service_name, platform, module_type='exploit'):
+    """
+    Search for exploits by service name and platform.
+
+    Args:
+    - client: The Metasploit client object.
+    - service_name (str): The name of the service.
+    - platform (str): The platform of the service.
+    - module_type (str, optional): The type of module to search for. Defaults to 'exploit'.
+    """
     global service_exploits
 
     try:
@@ -154,11 +174,7 @@ def exploit_main(ip_address, verbose=True):
             open_session(client)
             generate_report_en(client, service_exploits)
             send_scripts(client)
-            close = input("Do you want to close all the open sessions? (yes/no): ")
-            if close.lower() in ['yes', 'y']:
-                close_all_sessions(client)
-            else:
-                print("No sessions were closed")
+            close_all_sessions(client)
         else:
             print(Fore.RED + "Failed to authenticate with the Metasploit RPC server.")
     except Exception as e:
