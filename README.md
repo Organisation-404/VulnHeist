@@ -119,7 +119,7 @@ We’re always excited to welcome new contributors to **VulnHeist**! 🌟 If you
 
 ## 📜 License
 
-This project is licensed under the **BSD 3-Clause License**.
+This project is licensed under the **BSD 3-Clause License (modified) with notification requirement**.
 
 ## ⚠️ Disclaimer
 
