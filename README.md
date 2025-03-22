@@ -135,4 +135,3 @@ This tool is for **educational purposes only**. Unauthorized use is prohibited. 
 ---
 
 **Enjoy VulnHeist** and elevate your penetration testing game! 💥
-
